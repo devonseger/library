@@ -1,10 +1,18 @@
 import json
-from book import Book
+from models.book import Book
 
 class Library:
+    def __init__(self):  # runs automatically when we create an instance
+        print("You have created a library instance.")
+        self.books = []
 
-    def get_books(self):
-        pass
+    def get_books(self, filename="books.json"):
+        try:
+            with open(filename, "r") as file:
+                books = json.load(file)
+            return [book["title"] for book in books]
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []
 
     def get_users(self):
         pass
@@ -23,14 +31,10 @@ class Library:
             book.mark_as_returned()
             self.save_to_file()
 
-    def save_to_file(self, filename="users.json"):
+    def save_to_file(self, filename="books.json"):
         try:
-            with open(filename, "r") as file:
-                data = json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            data = {}  # empty dict if file not found
-
-        data[self.name] = [book.title for book in self.borrowed_books]
-
-        with open(filename, "w") as file:
-            json.dump(data, file, indent=4)
+            with open(filename, "w") as file:
+                book_data = [{"title": book.title, "author": book.author, "price": book.price, "published_date": book.published_date} for book in self.books]
+                json.dump(book_data, file, indent=4)
+        except Exception as e:
+            print(f"Error saving books: {e}")

@@ -2,7 +2,7 @@ import uuid
 
 class Book:
     
-    def __init__(self,title,author,price,published_date):
+    def __init__(self, title, author, price, published_date):
         self.id = str(uuid.uuid4())
         self.title = title
         self.author = author
